@@ -47,7 +47,7 @@ jobs:
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v3
         with:
-          context: devcontainer/Dockerfile
+          file: ./devcontainer/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/nvim-dev:latest
           # Specify the target architectures. You can add or remove architectures as needed.
