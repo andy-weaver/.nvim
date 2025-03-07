@@ -15,7 +15,9 @@ docker-push:
 
 # Run the Docker container
 docker-up:
+	cd devcontainer
 	docker compose up -d
+	cd ..
 
 # Stop the Docker container
 docker-down:
@@ -26,8 +28,4 @@ docker-ssh:
 	docker compose up -d || true
 	ssh root@localhost -p 2223
 
-# Running make cleans up the Docker container and image, 
-# builds the Docker image, 
-# pushes to dockerhub, 
-# and runs the Docker container
 docker: docker-clean docker-build docker-push docker-up

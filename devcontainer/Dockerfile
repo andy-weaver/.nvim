@@ -94,5 +94,10 @@ RUN nvim --headless "+Lazy! sync" +qa
 # Run Neovim again to install linters & formatters with Mason
 RUN nvim --headless "+MasonInstall" +qa
 
+# Create the .venv in the ./py directory
+RUN cd /root/.config/nvim/py && \
+    (uv init --name nvim || true) && \
+    uv sync
+
 # Default command: start SSH server
 CMD ["/usr/sbin/sshd", "-D"]
