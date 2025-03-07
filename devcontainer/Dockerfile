@@ -1,0 +1,98 @@
+# -----------------------------------------------------------------------------
+# Dockerfile for a Remote NeoVim Dev Container
+# -----------------------------------------------------------------------------
+# - Runs a pre-configured NeoVim instance
+# - Includes SSH access for remote usage
+# - Mounts files from your corporate laptop for editing
+# -----------------------------------------------------------------------------
+
+FROM ubuntu:latest
+
+# Avoid interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    neovim \
+    git \
+    curl \
+    openssh-server \
+    tmux \
+    ripgrep \
+    fzf \
+    python3 \
+    python3-dev \
+    python3-pip \
+    python3-neovim \
+    python3-pynvim \
+    lua5.1 \
+    lua5.1-dev \
+    liblua5.1-dev \
+    luarocks \
+    libluajit-5.1-dev \
+    pre-commit \
+    make \
+    build-essential && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /root
+
+# # Use config environment vars from the docker compose file to install the correct version of Neovim
+# ARG INSTALL_ARCH
+# ARG NVIM_VERSION
+
+# ENV NVIM_TAR_FILENAME=nvim-linux-$(INSTALL_ARCH).tar.gz
+# ENV NVIM_URL=https://github.com/neovim/neovim/releases/download/v$(NVIM_VERSION)/$(NVIM_TAR_FILENAME)
+
+# RUN echo "Neovim version: $NVIM_VERSION" > build.log
+# RUN echo "Neovim architecture: $INSTALL_ARCH" >> build.log
+# RUN echo "Neovim filename: $NVIM_TAR_FILENAME" >> build.log
+# RUN echo "Neovim download URL: $NVIM_URL" >> build.log
+# RUN echo "Installing Neovim from $NVIM_URL" >> build.log
+
+# # https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-arm64.tar.gz
+
+# # Install Neovim
+# RUN apt update && apt install -y neovim && \
+#     apt-get clean && \
+#     rm -rf /var/lib/apt/lists/*
+
+# RUN curl -L $NVIM_URL -o /root/$NVIM_TAR_FILENAME && \
+#     tar xzf /root/$NVIM_TAR_FILENAME && \
+#     rm $NVIM_TAR_FILENAME && \
+#     mkdir -p /root/bin && \
+#     export PATH=$PATH:/root/bin && \
+#     mv /root/nvim-linux* /root/bin/nvim && \
+#     ln -s /root/bin/nvim/bin/nvim /usr/local/bin/nvim
+
+# Clone neovim config
+RUN git clone --depth 1 https://github.com/andy-weaver/.nvim.git /root/.config/nvim
+
+# Link .vimrc to /root/.vimrc
+RUN ln -s /root/.config/nvim/.vimrc /root/.vimrc
+
+# Install Python support for uv package manager
+RUN pip install --break-system-packages uv
+
+# Configure SSH (enable root login)
+RUN mkdir /var/run/sshd && \
+    echo 'root:root' | chpasswd && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Generate SSH host keys (persistent)
+RUN ssh-keygen -A
+
+# Expose SSH port
+EXPOSE 22
+
+# Run Neovim in headless mode to install plugins
+RUN nvim --headless "+Lazy! sync" +qa
+
+# Run Neovim again to install linters & formatters with Mason
+RUN nvim --headless "+MasonInstall" +qa
+
+# Default command: start SSH server
+CMD ["/usr/sbin/sshd", "-D"]

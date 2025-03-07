@@ -1,0 +1,16 @@
+services:
+  nvim-dev:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: andyandyandyandy2023/nvim-dev:latest
+    environment:
+      - NVIM_VERSION=0.10.4
+      - INSTALL_ARCH=aarch64
+    ports:
+      - "2223:22"
+    volumes:
+      # - ~/mnt/cinfin/aweaver:/root/cinfin/aweaver
+      - ./:/root
+    tty: true
+    stdin_open: true
