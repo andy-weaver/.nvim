@@ -1,8 +1,6 @@
 services:
-  nvim-dev:
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+  nvim_dev:
+    container_name: nvim_dev
     image: andyandyandyandy2023/nvim-dev:latest
     environment:
       - NVIM_VERSION=0.10.4

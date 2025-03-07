@@ -1,4 +1,7 @@
 return {
   "nvim-lualine/lualine.nvim",
-  dependencies = { "nvim-tree/nvim-web-devicons" },
+  url="git@github:nvim-lualine/lualine.nvim.git",
+  dependencies = { 
+    "nvim-tree/nvim-web-devicons"
+  },
 }

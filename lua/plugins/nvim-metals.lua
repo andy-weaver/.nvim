@@ -1,5 +1,6 @@
 return {
   "scalameta/nvim-metals",
+  url = "git@github:scalameta/nvim-metals.git",
   dependencies = {
     "nvim-lua/plenary.nvim",
   },

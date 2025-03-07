@@ -1,0 +1,56 @@
+# .github/workflows/docker-multiarch.yml
+#
+# This workflow builds a multi-architecture Docker image using Docker Buildx.
+# It supports 64-bit architectures (e.g., amd64 and arm64) and pushes the built image
+# to DockerHub with appropriate tags.
+#
+# Prerequisites:
+#   - DockerHub credentials stored in repository secrets:
+#       DOCKERHUB_USERNAME and DOCKERHUB_TOKEN.
+#
+#   - A valid Dockerfile at the root (or adjust the 'context' below accordingly).
+#
+# The workflow is triggered on any push to the main branch.
+name: Build and Push Multi-Arch Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository.
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up QEMU for emulation of different CPU architectures.
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: all
+
+      # Step 3: Set up Docker Buildx.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Step 4: Log in to DockerHub using credentials stored in GitHub Secrets.
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: andyandyandyandy2023
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Step 5: Build and push the Docker image.
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v3
+        with:
+          context: devcontainer/Dockerfile
+          push: true
+          tags: andyandyandyandy2023/nvim-dev:latest
+          # Specify the target architectures. You can add or remove architectures as needed.
+          platforms: linux/amd64,linux/arm64,linux/arm/v8,linux/arm/v7,linux/amd64/v3
+
+# End of file
