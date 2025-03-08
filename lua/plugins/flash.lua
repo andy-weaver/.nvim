@@ -1,7 +1,6 @@
 return {
   "folke/flash.nvim",
   event = "VeryLazy",
-  url="git@github:folke/flash.nvim.git",
   opts = {},
   keys = {
     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },

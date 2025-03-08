@@ -2,9 +2,6 @@ services:
   nvim_dev:
     container_name: nvim_dev
     image: andyandyandyandy2023/nvim-dev:latest
-    environment:
-      - NVIM_VERSION=0.10.4
-      - INSTALL_ARCH=aarch64
     ports:
       - "2223:22"
     volumes:

@@ -1,6 +1,5 @@
 return {
   "mrcjkb/rustaceanvim",
-  url = "git@github:mrcjkb/rustaceanvim.git",
   version = vim.fn.has("nvim-0.10.0") == 0 and "^4" or false,
   ft = { "rust" },
   opts = {

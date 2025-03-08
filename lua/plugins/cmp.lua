@@ -1,6 +1,5 @@
 return {
   "hrsh7th/nvim-cmp",
-  url="git@github:hrsh7th/nvim-cmp.git",
   dependencies = {
     "neovim/nvim-lspconfig",
     "hrsh7th/cmp-nvim-lsp",

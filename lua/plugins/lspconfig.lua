@@ -1,6 +1,5 @@
 return {
   "neovim/nvim-lspconfig",
-  url="git@github:neovim/nvim-lspconfig.git",
   dependencies = {
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",

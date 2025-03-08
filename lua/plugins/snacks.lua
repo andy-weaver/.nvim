@@ -1,6 +1,5 @@
 return {
   "folke/snacks.nvim",
-  url="git@github:folke/snacks.nvim.git",
   priority = 1000,
   lazy = false,
   opts = {
