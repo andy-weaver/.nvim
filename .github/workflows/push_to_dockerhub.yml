@@ -1,4 +1,4 @@
-# .github/workflows/docker-multiarch.yml
+# .github/workflows/push_to_dockerhub.yml
 #
 # This workflow builds a multi-architecture Docker image using Docker Buildx.
 # It supports 64-bit architectures (e.g., amd64 and arm64) and pushes the built image
@@ -7,8 +7,6 @@
 # Prerequisites:
 #   - DockerHub credentials stored in repository secrets:
 #       DOCKERHUB_USERNAME and DOCKERHUB_TOKEN.
-#
-#   - A valid Dockerfile at the root (or adjust the 'context' below accordingly).
 #
 # The workflow is triggered on any push to the main branch.
 name: Build and Push Multi-Arch Docker Image
@@ -19,6 +17,23 @@ on:
       - main
 
 jobs:
+  log-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Log GitHub context
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Log GitHub event
+        run: echo "$GITHUB_EVENT"
+
+      - name: Log ls and pwd
+        run: |
+          ls -lah
+          pwd -P
+
   build-amd64:
     runs-on: ubuntu-latest
     steps:
