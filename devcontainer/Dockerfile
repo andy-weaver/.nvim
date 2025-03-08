@@ -41,18 +41,6 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /root
 
-# Copy over install scripts
-COPY install_node.sh /root/install_node.sh
-COPY install_nvim.sh /root/install_nvim.sh
-
-# Clone dotfiles repo
-RUN git clone http://github.com/aaweaver-actuary/dotfiles /root/dotfiles && \
-    cd /root/dotfiles && \
-    cp /root/dotfiles/tmux.conf /root/.tmux.conf && \
-    cp /root/dotfiles/install_dotfiles /usr/bin/install_dotfiles && \
-    chmod +x /usr/bin/install_dotfiles && \
-    rm -rf /root/dotfiles
-
 # Clone neovim config
 RUN git clone --depth 1 https://github.com/andy-weaver/.nvim.git /root/.config/nvim
 
@@ -74,9 +62,6 @@ RUN ssh-keygen -A
 # Expose SSH port
 EXPOSE 22
 
-# # Run Neovim in headless mode to install plugins
-# RUN nvim --headless "+Lazy! sync" +qa
-
 # Create the .venv in the ./py directory
 RUN cd /root/.config/nvim/py && \
     (uv init --name nvim || true) && \
@@ -89,6 +74,13 @@ ENV LC_CTYPE C.UTF-8
 
 # Handle git issue 
 RUN git config --global --add safe.directory '*'
+
+# Copy over install scripts
+COPY install_node.sh /root/install_node.sh
+COPY install_nvim.sh /root/install_nvim.sh
+
+# Run Neovim in headless mode to install plugins
+RUN nvim --headless "+Lazy! sync" +qa
 
 # Default command: start SSH server
 CMD ["/usr/sbin/sshd", "-D"]
