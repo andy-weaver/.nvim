@@ -42,8 +42,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /root
 
 # Copy over install scripts
-COPY ./install_node /root/install_node
-COPY ./install_nvim /root/install_nvim
+COPY install_node.sh /root/install_node.sh
+COPY install_nvim.sh /root/install_nvim.sh
 
 # Clone dotfiles repo
 RUN git clone http://github.com/aaweaver-actuary/dotfiles /root/dotfiles && \
