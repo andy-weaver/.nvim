@@ -8,3 +8,6 @@ foo.*
 data
 .venv
 .env
+
+devcontainer/.cache
+devcontainer/.local

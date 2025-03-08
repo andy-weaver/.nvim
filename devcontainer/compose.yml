@@ -2,6 +2,9 @@ services:
   nvim_dev:
     container_name: nvim_dev
     image: andyandyandyandy2023/nvim-dev:latest
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     ports:
       - "2223:22"
     volumes:
